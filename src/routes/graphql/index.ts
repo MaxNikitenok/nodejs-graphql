@@ -9,8 +9,8 @@ import {
 } from 'graphql';
 import { UUIDType } from './types/uuid.js';
 import { CreateUserInputType, UserType } from './types/user.js';
-import { PostType } from './types/post.js';
-import { ProfileType } from './types/profile.js';
+import { CreatePostInputType, PostType } from './types/post.js';
+import { CreateProfileInputType, ProfileType } from './types/profile.js';
 import { MemberType, MemberTypeId } from './types/member.js';
 import { IContext, IParent } from './types/common.js';
 
@@ -130,7 +130,35 @@ const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
                 data: args.dto,
               });
             }
-          }
+          },
+
+          createPost: {
+            type: PostType as GraphQLObjectType<IParent, IContext>,
+            args: {
+              dto: {
+                type: new GraphQLNonNull(CreatePostInputType)
+              },
+            },
+            resolve: async (parent, args) => {
+              return prisma.post.create({
+                data: args.dto,
+              });
+            }
+          },
+
+          createProfile: {
+            type: ProfileType as GraphQLObjectType<IParent, IContext>,
+            args: {
+              dto: {
+                type: new GraphQLNonNull(CreateProfileInputType)
+              },
+            },
+            resolve: async (parent, args) => {
+              return prisma.profile.create({
+                data: args.dto,
+              });
+            }
+          } 
         }
       })
 
